@@ -142,6 +142,21 @@ describe 'add_facts_for_metadata' do
         expect(facts[:systemd]).to be false
       end
     end
+
+    context 'and stdlib listed after systemd' do
+      let(:dependencies) do
+        [
+          { 'name' => 'puppet/systemd' },
+          { 'name' => 'puppetlabs/stdlib' },
+        ]
+      end
+
+      it 'has systemd on Red Hat 9' do
+        add_facts_for_metadata(metadata)
+        facts = RspecPuppetFacts.with_custom_facts('redhat-9-x86_64', { os: { 'family' => 'RedHat', 'release' => { 'major' => '9' } } })
+        expect(facts[:systemd]).to be true
+      end
+    end
   end
 
   context 'with stdlib' do

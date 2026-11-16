@@ -50,17 +50,18 @@ end
 def add_facts_for_metadata(metadata)
   return unless metadata && metadata['dependencies']
 
-  metadata['dependencies'].each do |dependency|
-    case normalize_module_name(dependency['name'])
-    when 'camptocamp/systemd', 'puppet/systemd'
-      if RSpec.configuration.facterdb_string_keys
-        add_custom_fact 'systemd', ->(_os, facts) { facts['service_provider'] == 'systemd' }
-      else
-        add_custom_fact :systemd, ->(_os, facts) { facts[:service_provider] == 'systemd' }
-      end
-    when 'puppetlabs/stdlib'
-      add_stdlib_facts
-    end
+  modules = metadata['dependencies'].map { |dependency| normalize_module_name(dependency['name']) }
+
+  # Custom facts are resolved in order and systemd is derived from
+  # service_provider, so stdlib must come first
+  add_stdlib_facts if modules.include?('puppetlabs/stdlib')
+
+  return if (modules & %w[camptocamp/systemd puppet/systemd]).empty?
+
+  if RSpec.configuration.facterdb_string_keys
+    add_custom_fact 'systemd', ->(_os, facts) { facts['service_provider'] == 'systemd' }
+  else
+    add_custom_fact :systemd, ->(_os, facts) { facts[:service_provider] == 'systemd' }
   end
 end
 
