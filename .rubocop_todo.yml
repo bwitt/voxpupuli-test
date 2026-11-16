@@ -28,7 +28,7 @@ RSpec/ContextWording:
   Exclude:
     - 'spec/facts_spec.rb'
 
-# Offense count: 2
+# Offense count: 3
 # Configuration parameters: IgnoredMetadata.
 RSpec/DescribeClass:
   Exclude:
@@ -38,6 +38,7 @@ RSpec/DescribeClass:
     - '**/spec/system/**/*'
     - '**/spec/views/**/*'
     - 'spec/facts_spec.rb'
+    - 'spec/rake/check_spec.rb'
 
 # Offense count: 1
 # Configuration parameters: CountAsOne.

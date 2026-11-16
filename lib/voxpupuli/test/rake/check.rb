@@ -69,7 +69,7 @@ namespace :check do
     errors = []
 
     Dir['{data,functions,lib,manifests,templates,types}/**/*'].each do |filename|
-      next unless File.file? filename
+      next unless File.file?(filename) && !File.empty?(filename)
 
       File.open(filename, 'r:utf-8') do |file|
         data = file.readline
