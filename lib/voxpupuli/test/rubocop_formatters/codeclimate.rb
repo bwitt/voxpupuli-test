@@ -50,7 +50,7 @@ class CodeclimateFormatter < RuboCop::Formatter::BaseFormatter
         location: hash_for_location(file, offense),
         severity: SEVERITY_MAP[offense.severity.name],
       }
-      hash[:fingerprint] = Digest::SHA2.hexdigest([file, offense.cop_name, offense.line, offense.column].to_json)
+      hash[:fingerprint] = Digest::SHA2.hexdigest([smart_path(file), offense.cop_name, offense.line, offense.column].to_json)
       hash
     end
   end
