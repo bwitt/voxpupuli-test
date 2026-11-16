@@ -91,6 +91,42 @@ describe 'override_facts' do
 
     it { expect(override_facts(base_facts, os: { 'release' => { minor: '8' } })).to eq(expected) }
   end
+
+  describe 'with facterdb_string_keys' do
+    around do |example|
+      original = RSpec.configuration.facterdb_string_keys
+      RSpec.configuration.facterdb_string_keys = true
+      example.run
+    ensure
+      RSpec.configuration.facterdb_string_keys = original
+    end
+
+    let(:base_facts) do
+      {
+        'os' => {
+          'family' => 'RedHat',
+          'release' => {
+            'major' => '7',
+            'minor' => '7',
+          },
+        },
+      }
+    end
+
+    let(:expected) do
+      {
+        'os' => {
+          'family' => 'RedHat',
+          'release' => {
+            'major' => '7',
+            'minor' => '8',
+          },
+        },
+      }
+    end
+
+    it { expect(override_facts(base_facts, os: { release: { minor: '8' } })).to eq(expected) }
+  end
 end
 
 describe 'add_facts_for_metadata' do

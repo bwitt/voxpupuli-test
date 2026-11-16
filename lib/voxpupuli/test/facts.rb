@@ -19,7 +19,7 @@ include RspecPuppetFacts
 # end
 def override_facts(base_facts, **overrides)
   facts = Marshal.load(Marshal.dump(base_facts))
-  apply_overrides!(facts, overrides, false)
+  apply_overrides!(facts, overrides, RSpec.configuration.facterdb_string_keys)
   facts
 end
 
